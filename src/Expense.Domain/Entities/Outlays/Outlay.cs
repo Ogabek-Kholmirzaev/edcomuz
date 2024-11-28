@@ -1,9 +1,9 @@
 ﻿using Expense.Domain.Entities.Abstractions;
 using Expense.Domain.Entities.Categories;
 
-namespace Expense.Domain.Entities.Expenses;
+namespace Expense.Domain.Entities.Outlays;
 
-public sealed class Expense : Entity<ulong>
+public sealed class Outlay : Entity<ulong>
 {
     public ulong CategoryId { get; set; }
     public decimal Price { get; set; }
