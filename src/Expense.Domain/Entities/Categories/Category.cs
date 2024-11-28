@@ -1,6 +1,6 @@
 ﻿using Expense.Domain.Entities.Abstractions;
 
-namespace Expense.Domain.Entities.Category;
+namespace Expense.Domain.Entities.Categories;
 
 public sealed class Category : Entity<ulong>
 {
