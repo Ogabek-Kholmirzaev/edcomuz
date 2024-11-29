@@ -14,5 +14,39 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
         builder.Property(category => category.Name)
             .IsRequired()
             .HasMaxLength(50);
+
+        builder.HasData(new List<Category>
+        {
+            new()
+            {
+                Id = 1,
+                Name = "Oziq-ovqat",
+                CreatedAt = DateTime.UtcNow
+            },
+            new()
+            {
+                Id = 2,
+                Name = "Transport",
+                CreatedAt = DateTime.UtcNow
+            },
+            new()
+            {
+                Id = 3,
+                Name = "Mobil aloqa",
+                CreatedAt = DateTime.UtcNow
+            },
+            new()
+            {
+                Id = 4,
+                Name = "Internet",
+                CreatedAt = DateTime.UtcNow
+            },
+            new()
+            {
+                Id = 5,
+                Name = "O'yin-kulgi",
+                CreatedAt = DateTime.UtcNow
+            }
+        });
     }
 }
