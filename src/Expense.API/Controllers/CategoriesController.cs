@@ -2,14 +2,13 @@ using Expense.Application.Categories.CreateCategory;
 using Expense.Application.Categories.GetCategories;
 using Expense.Application.Categories.GetCategoryById;
 using Expense.Application.DTOs.Categories;
-using Expense.Domain.Entities.Categories;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Expense.API.Controllers;
 
-[ApiController]
 [Route("api/categories")]
+[ApiController]
 public class CategoriesController(ISender sender) : ControllerBase
 {
     [HttpGet]
@@ -21,7 +20,7 @@ public class CategoriesController(ISender sender) : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Category>> GetById([FromRoute] long id)
+    public async Task<ActionResult<GetCategoryByIdResult>> GetById([FromRoute] long id)
     {
         var query = new GetCategoryByIdQuery(id);
         var response = await sender.Send(query);
@@ -30,11 +29,11 @@ public class CategoriesController(ISender sender) : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<CreateCategoryResult>> Create([FromBody] CategoryDto categoryDto)
+    public async Task<ActionResult<CreateCategoryResult>> Create(CategoryDto categoryDto)
     {
         var command = new CreateCategoryCommand(categoryDto);
         var response = await sender.Send(command);
 
-        return CreatedAtAction($"api/categories/{response.Id}", new { id = response.Id });
+        return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
     }
 }
