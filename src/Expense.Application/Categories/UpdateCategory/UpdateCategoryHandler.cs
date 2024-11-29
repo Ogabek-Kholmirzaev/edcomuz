@@ -18,6 +18,7 @@ public class UpdateCategoryHandler(
             .GetAsync(category => category.Id == command.Category.Id, null, true, cancellationToken);
 
         category.Name = command.Category.Name;
+        category.UpdatedAt = DateTime.UtcNow;
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
