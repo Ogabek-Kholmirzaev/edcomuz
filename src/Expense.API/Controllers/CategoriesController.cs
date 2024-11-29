@@ -1,4 +1,6 @@
 using Expense.Application.Categories.GetCategories;
+using Expense.Application.Categories.GetCategoryById;
+using Expense.Domain.Entities.Categories;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,6 +14,15 @@ public class CategoriesController(ISender sender) : ControllerBase
     public async Task<ActionResult<IEnumerable<GetCategoriesResult>>> Get()
     {
         var response = await sender.Send(new GetCategoriesQuery());
+
+        return Ok(response);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Category>> GetById([FromRoute] ulong id)
+    {
+        var query = new GetCategoryByIdQuery(id);
+        var response = await sender.Send(query);
 
         return Ok(response);
     }
