@@ -9,44 +9,50 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
     public void Configure(EntityTypeBuilder<Category> builder)
     {
         builder.ToTable("categories");
-        builder.HasKey(category => category.Id);
 
         builder.Property(category => category.Name)
             .IsRequired()
             .HasMaxLength(50);
 
-        builder.HasData(new List<Category>
+        builder.HasData(GetCategories());
+    }
+
+    private IEnumerable<Category> GetCategories()
+    {
+        var createdDateTime = new DateTime(2024, 11, 29, 0, 0, 0, DateTimeKind.Utc);
+
+        return new List<Category>
         {
             new()
             {
                 Id = 1,
                 Name = "Oziq-ovqat",
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = createdDateTime
             },
             new()
             {
                 Id = 2,
                 Name = "Transport",
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = createdDateTime
             },
             new()
             {
                 Id = 3,
                 Name = "Mobil aloqa",
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = createdDateTime
             },
             new()
             {
                 Id = 4,
                 Name = "Internet",
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = createdDateTime
             },
             new()
             {
                 Id = 5,
                 Name = "O'yin-kulgi",
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = createdDateTime
             }
-        });
+        };
     }
 }

@@ -9,7 +9,6 @@ public class OutlayConfiguration : IEntityTypeConfiguration<Outlay>
     public void Configure(EntityTypeBuilder<Outlay> builder)
     {
         builder.ToTable("outlays");
-        builder.HasKey(outlay => outlay.Id);
 
         builder.Property(outlay => outlay.CategoryId)
             .IsRequired();

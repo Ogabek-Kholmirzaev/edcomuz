@@ -21,7 +21,7 @@ public class CategoriesController(ISender sender) : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Category>> GetById([FromRoute] ulong id)
+    public async Task<ActionResult<Category>> GetById([FromRoute] long id)
     {
         var query = new GetCategoryByIdQuery(id);
         var response = await sender.Send(query);
