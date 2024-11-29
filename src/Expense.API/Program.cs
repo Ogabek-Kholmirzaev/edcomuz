@@ -1,3 +1,4 @@
+using Expense.Application;
 using Expense.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddInfrastructureModule(builder.Configuration);
+builder.Services.AddApplicationModule();
 
 var app = builder.Build();
 
