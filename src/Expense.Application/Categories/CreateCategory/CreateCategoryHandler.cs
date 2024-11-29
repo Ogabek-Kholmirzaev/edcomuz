@@ -22,6 +22,6 @@ public class CreateCategoryHandler(
         categoryRepository.Add(category);
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new CreateCategoryResult(true);
+        return new CreateCategoryResult(category.Id);
     }
 }
