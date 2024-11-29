@@ -1,4 +1,5 @@
 ﻿using Expense.Infrastructure.Data;
+using Expense.Infrastructure.UnitOfWorks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,7 @@ public static class InfrastructureModule
             ?? throw new ArgumentNullException("Database connection string is null");
 
         services.AddDbContext<OutlayDbContext>(options => options.UseNpgsql(connectionString));
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
     }
