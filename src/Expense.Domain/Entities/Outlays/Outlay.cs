@@ -3,7 +3,7 @@ using Expense.Domain.Entities.Categories;
 
 namespace Expense.Domain.Entities.Outlays;
 
-public sealed class Outlay : Entity<ulong>
+public sealed class Outlay : Entity
 {
     public ulong CategoryId { get; set; }
     public DateOnly Date { get; set; }
