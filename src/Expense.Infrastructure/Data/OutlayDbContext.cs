@@ -1,4 +1,5 @@
-﻿using Expense.Domain.Entities.Categories;
+﻿using System.Reflection;
+using Expense.Domain.Entities.Categories;
 using Expense.Domain.Entities.Outlays;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,4 +13,11 @@ public class OutlayDbContext : DbContext
 
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<Outlay> Expenses => Set<Outlay>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+        base.OnModelCreating(modelBuilder);
+    }
 }
