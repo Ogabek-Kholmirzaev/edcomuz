@@ -12,7 +12,7 @@ public class OutlayDbContext : DbContext
     }
 
     public DbSet<Category> Categories => Set<Category>();
-    public DbSet<Outlay> Expenses => Set<Outlay>();
+    public DbSet<Outlay> Outlays => Set<Outlay>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
