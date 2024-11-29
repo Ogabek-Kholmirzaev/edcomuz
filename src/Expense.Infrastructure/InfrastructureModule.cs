@@ -1,4 +1,5 @@
 ﻿using Expense.Infrastructure.Data;
+using Expense.Infrastructure.Repositories;
 using Expense.Infrastructure.UnitOfWorks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -17,6 +18,7 @@ public static class InfrastructureModule
 
         services.AddDbContext<OutlayDbContext>(options => options.UseNpgsql(connectionString));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
         return services;
     }
