@@ -25,7 +25,7 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
         {
             foreach (var include in includes)
             {
-                if (string.IsNullOrWhiteSpace(include))
+                if (!string.IsNullOrWhiteSpace(include))
                 {
                     query = query.Include(include);
                 }
