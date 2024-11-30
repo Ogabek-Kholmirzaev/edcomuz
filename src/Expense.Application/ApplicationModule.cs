@@ -12,6 +12,7 @@ public static class ApplicationModule
         {
             configuration.RegisterServicesFromAssembly(typeof(ApplicationModule).Assembly);
             configuration.AddOpenBehavior(typeof(ValidationBehavior<,>));
+            configuration.AddOpenBehavior(typeof(LoggingBehavior<,>));
         });
 
         services.AddValidatorsFromAssembly(typeof(ApplicationModule).Assembly);
