@@ -1,4 +1,5 @@
 using Expense.Application.Categories.CreateCategory;
+using Expense.Application.Categories.DeleteCategory;
 using Expense.Application.Categories.GetCategories;
 using Expense.Application.Categories.GetCategoryById;
 using Expense.Application.Categories.UpdateCategory;
@@ -49,6 +50,15 @@ public class CategoriesController(ISender sender) : ControllerBase
         }
 
         var command = new UpdateCategoryCommand(categoryDto);
+        var response = await sender.Send(command);
+
+        return Ok(response);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<DeleteCategoryResult>> Delete([FromRoute] long id)
+    {
+        var command = new DeleteCategoryCommand(id);
         var response = await sender.Send(command);
 
         return Ok(response);
