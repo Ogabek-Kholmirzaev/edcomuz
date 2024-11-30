@@ -1,4 +1,4 @@
-namespace Expense.Application.Exceptions;
+namespace Expense.Infrastructure.Exceptions;
 
 public class NotFoundException : Exception
 {

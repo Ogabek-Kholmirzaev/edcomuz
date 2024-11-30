@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Expense.Domain.Entities.Abstractions;
 using Expense.Infrastructure.Data;
+using Expense.Infrastructure.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Expense.Infrastructure.Repositories;
@@ -42,7 +43,8 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
     public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> expression, string[] includes = null, bool isTracking = true, CancellationToken cancellationToken = default)
     {
         var entity = await GetAll(expression, includes, isTracking)
-            .FirstOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(cancellationToken)
+            ?? throw new NotFoundException(typeof(TEntity).Name, GetPropertyName(expression));
 
         return entity;
     }
@@ -60,5 +62,18 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity
     public void Delete(TEntity entity)
     {
         _dbSet.Remove(entity);
+    }
+    
+    private string GetPropertyName(Expression<Func<TEntity, bool>> expression)
+    {
+        if (expression.Body is BinaryExpression binaryExpression)
+        {
+            if (binaryExpression.Left is MemberExpression memberExpression)
+            {
+                return memberExpression.Member.Name;
+            }
+        }
+
+        return string.Empty;
     }
 }
