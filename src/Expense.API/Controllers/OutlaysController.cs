@@ -1,3 +1,5 @@
+using Expense.Application.DTOs.Outlays;
+using Expense.Application.Outlays.CreateOutlay;
 using Expense.Application.Outlays.GetOutlayById;
 using Expense.Application.Outlays.GetOutlays;
 using MediatR;
@@ -24,5 +26,14 @@ public class OutlaysController(ISender sender) : ControllerBase
         var response = await sender.Send(query);
 
         return Ok(response);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<CreateOutlayResult>> Create([FromBody] OutlayDto outlayDto)
+    {
+        var command = new CreateOutlayCommand(outlayDto);
+        var response = await sender.Send(command);
+
+        return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
     }
 }
