@@ -1,5 +1,6 @@
 using Expense.Application.Abstractions.CQRS;
+using Expense.Application.Pagination;
 
 namespace Expense.Application.Outlays.GetOutlays;
 
-public record GetOutlaysQuery : IQuery<GetOutlaysResult>;
+public record GetOutlaysQuery(PaginationRequest Request) : IQuery<GetOutlaysResult>;

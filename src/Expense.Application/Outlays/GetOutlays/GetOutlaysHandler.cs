@@ -1,5 +1,6 @@
 using Expense.Application.Abstractions.CQRS;
 using Expense.Application.DTOs.Outlays;
+using Expense.Application.Pagination;
 using Expense.Domain.Entities.Outlays;
 using Expense.Infrastructure.Repositories;
 using Mapster;
@@ -14,12 +15,28 @@ public class GetOutlaysHandler(IRepository<Outlay> outlayRepository)
         GetOutlaysQuery query,
         CancellationToken cancellationToken)
     {
-        var outlays = await outlayRepository.GetAll(null, ["Category"], false)
-            .OrderBy(outlay => outlay.Id)
-            .ToListAsync(cancellationToken);
+        
+        var outlaysQuery = outlayRepository.GetAll(null, null, false);
 
+        var totalCount = await outlaysQuery.LongCountAsync(cancellationToken);
+        var pageIndex = query.Request.PageIndex;
+        var pageSize = query.Request.PageSize;
+        
+        var outlays = await outlaysQuery
+            .Include(outlay => outlay.Category)
+            .OrderBy(outlay => outlay.Id)
+            .Skip(pageSize * (pageIndex - 1))
+            .Take(pageSize)
+            .ToListAsync(cancellationToken); 
+        
         var outlaysDto = outlays.Adapt<List<OutlayDto>>();
 
-        return new GetOutlaysResult(outlaysDto);
+        var paginatedResult = new PaginatedResult<OutlayDto>(
+            pageIndex,
+            pageSize,
+            totalCount,
+            outlaysDto);
+
+        return new GetOutlaysResult(paginatedResult);
     }
 }

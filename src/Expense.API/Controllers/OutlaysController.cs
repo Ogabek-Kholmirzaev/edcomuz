@@ -4,6 +4,7 @@ using Expense.Application.Outlays.DeleteOutlay;
 using Expense.Application.Outlays.GetOutlayById;
 using Expense.Application.Outlays.GetOutlays;
 using Expense.Application.Outlays.UpdateOutlay;
+using Expense.Application.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,9 +15,9 @@ namespace Expense.API.Controllers;
 public class OutlaysController(ISender sender) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<GetOutlaysResult>> Get()
+    public async Task<ActionResult<GetOutlaysResult>> Get([FromQuery] PaginationRequest request)
     {
-        var response = await sender.Send(new GetOutlaysQuery());
+        var response = await sender.Send(new GetOutlaysQuery(request));
 
         return Ok(response);
     }
