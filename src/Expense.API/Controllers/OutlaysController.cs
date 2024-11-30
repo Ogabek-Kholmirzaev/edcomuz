@@ -1,5 +1,6 @@
 using Expense.Application.DTOs.Outlays;
 using Expense.Application.Outlays.CreateOutlay;
+using Expense.Application.Outlays.DeleteOutlay;
 using Expense.Application.Outlays.GetOutlayById;
 using Expense.Application.Outlays.GetOutlays;
 using Expense.Application.Outlays.UpdateOutlay;
@@ -44,6 +45,15 @@ public class OutlaysController(ISender sender) : ControllerBase
         [FromBody] OutlayDto outlayDto)
     {
         var command = new UpdateOutlayCommand(outlayDto);
+        var response = await sender.Send(command);
+
+        return Ok(response);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<DeleteOutlayResult>> Delete([FromRoute] long id)
+    {
+        var command = new DeleteOutlayCommand(id);
         var response = await sender.Send(command);
 
         return Ok(response);
