@@ -8,6 +8,6 @@ public record OutlayDto(
     DateOnly Date,
     decimal Price,
     string? Comment,
-    CategoryDto Category,
+    CategoryDto? Category,
     DateTime CreatedAt,
     DateTime? UpdatedAt);
