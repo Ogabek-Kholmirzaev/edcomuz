@@ -1,6 +1,7 @@
 ﻿using Expense.Infrastructure.Data;
 using Expense.Infrastructure.Repositories;
 using Expense.Infrastructure.UnitOfWorks;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,5 +22,15 @@ public static class InfrastructureModule
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
         return services;
+    }
+    
+    public static IApplicationBuilder  UseInfrastructureModule(this IApplicationBuilder app)
+    {
+        using var scope = app.ApplicationServices.CreateScope();
+        using var dbContext = scope.ServiceProvider.GetRequiredService<OutlayDbContext>();
+        
+        dbContext.Database.MigrateAsync().GetAwaiter().GetResult();
+        
+        return app;
     }
 }
