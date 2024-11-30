@@ -11,7 +11,7 @@ public class GetOutlaysHandler(IRepository<Outlay> outlayRepository)
     : IQueryHandler<GetOutlaysQuery, GetOutlaysResult>
 {
     public async Task<GetOutlaysResult> Handle(
-        GetOutlaysQuery request,
+        GetOutlaysQuery query,
         CancellationToken cancellationToken)
     {
         var outlays = await outlayRepository.GetAll(null, ["Category"], false)
