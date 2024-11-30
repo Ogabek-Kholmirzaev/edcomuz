@@ -1,5 +1,6 @@
 using Expense.Application.Abstractions.CQRS;
 using Expense.Application.DTOs.Categories;
+using Expense.Application.Pagination;
 using Expense.Domain.Entities.Categories;
 using Expense.Infrastructure.Repositories;
 using Mapster;
@@ -14,12 +15,26 @@ public class GetCategoriesHandler(IRepository<Category> categoryRepository)
         GetCategoriesQuery query,
         CancellationToken cancellationToken)
     {
-        var categories = await categoryRepository.GetAll(null!, null!, false)
-            .OrderBy(category => category.Id)
-            .ToListAsync(cancellationToken);
+        var categoriesQuery = categoryRepository.GetAll(null!, null!, false);
 
+        var totalCount = await categoriesQuery.LongCountAsync(cancellationToken);
+        var pageIndex = query.Request.PageIndex;
+        var pageSize = query.Request.PageSize;
+
+        var categories = await categoriesQuery
+            .OrderBy(category => category.Id)
+            .Skip(pageSize * (pageIndex - 1))
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+        
         var categoriesDto = categories.Adapt<List<CategoryDto>>();
 
-        return new GetCategoriesResult(categoriesDto);
+        var paginatedResult = new PaginatedResult<CategoryDto>(
+            pageIndex,
+            pageSize,
+            totalCount,
+            categoriesDto);
+
+        return new GetCategoriesResult(paginatedResult);
     }
 }

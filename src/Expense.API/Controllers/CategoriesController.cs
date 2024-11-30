@@ -4,6 +4,7 @@ using Expense.Application.Categories.GetCategories;
 using Expense.Application.Categories.GetCategoryById;
 using Expense.Application.Categories.UpdateCategory;
 using Expense.Application.DTOs.Categories;
+using Expense.Application.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,9 +15,9 @@ namespace Expense.API.Controllers;
 public class CategoriesController(ISender sender) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<GetCategoriesResult>>> Get()
+    public async Task<ActionResult<GetCategoriesResult>> Get([FromQuery] PaginationRequest request)
     {
-        var response = await sender.Send(new GetCategoriesQuery());
+        var response = await sender.Send(new GetCategoriesQuery(request));
 
         return Ok(response);
     }
