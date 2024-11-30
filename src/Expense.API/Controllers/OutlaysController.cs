@@ -2,6 +2,7 @@ using Expense.Application.DTOs.Outlays;
 using Expense.Application.Outlays.CreateOutlay;
 using Expense.Application.Outlays.GetOutlayById;
 using Expense.Application.Outlays.GetOutlays;
+using Expense.Application.Outlays.UpdateOutlay;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,5 +36,16 @@ public class OutlaysController(ISender sender) : ControllerBase
         var response = await sender.Send(command);
 
         return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<UpdateOutlayResult>> Update(
+        [FromRoute] long id,
+        [FromBody] OutlayDto outlayDto)
+    {
+        var command = new UpdateOutlayCommand(outlayDto);
+        var response = await sender.Send(command);
+
+        return Ok(response);
     }
 }
