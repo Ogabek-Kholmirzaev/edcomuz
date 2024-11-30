@@ -1,3 +1,4 @@
+using Expense.Application.Outlays.GetOutlayById;
 using Expense.Application.Outlays.GetOutlays;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,15 @@ public class OutlaysController(ISender sender) : ControllerBase
     public async Task<ActionResult<GetOutlaysResult>> Get()
     {
         var response = await sender.Send(new GetOutlaysQuery());
+
+        return Ok(response);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<GetOutlayByIdResult>> GetById([FromRoute] long id)
+    {
+        var query = new GetOutlayByIdQuery(id);
+        var response = await sender.Send(query);
 
         return Ok(response);
     }
