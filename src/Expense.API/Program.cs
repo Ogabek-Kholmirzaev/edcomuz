@@ -1,3 +1,4 @@
+using Expense.API.Middlewares;
 using Expense.Application;
 using Expense.Infrastructure;
 
@@ -20,6 +21,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseAuthorization();
 
