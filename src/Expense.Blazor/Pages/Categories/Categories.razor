@@ -65,24 +65,24 @@
         <div class="pagination d-flex justify-content-center align-items-center mt-3 mb-3">
             <button
                 class="btn btn-primary me-2"
-                @onclick="PreviousPage"
-                disabled="@((Page <= 1))">
+                disabled="@((Page <= 1))"
+                @onclick="() => navigationService.NavigateToCategories(Page - 1, PageSize, true)">
                 Previous
             </button>
 
-            @for (int i = 1; i <= TotalPages; i++)
+            @foreach (var item in _pages)
             {
                 <button
-                    class="btn @((i == Page ? "btn-secondary" : "btn-outline-primary")) me-1"
-                    @onclick="(() => GoToPage(i))">
-                    @i
+                    class="btn @((item == Page ? "btn-secondary" : "btn-outline-primary")) me-1"
+                    @onclick="(() => navigationService.NavigateToCategories(item, PageSize, true))">
+                    @item
                 </button>
             }
 
             <button
                 class="btn btn-primary ms-2"
-                @onclick="NextPage"
-                disabled="@((Page * PageSize) >= TotalCount)">
+                disabled="@((Page * PageSize) >= TotalCount)"
+                @onclick="() => navigationService.NavigateToCategories(Page + 1, PageSize, true)">
                 Next
             </button>
         </div>
@@ -94,20 +94,40 @@ else
 }
 
 @code {
+    private List<int> _pages = new();
     private GetCategoriesResult? _result;
     private long TotalCount;
-    private int Page = 1;
-    private int PageSize = 20;
-    private long TotalPages => (TotalCount + PageSize - 1) / PageSize;
+    private int Page;
+    private int PageSize;
+    private long TotalPages;
 
     protected override async Task OnInitializedAsync()
     {
-        _result = await LoadDataAsync();
+        Page = 1;
+        PageSize = 50;
+
+        if (navigationManager.TryGetQueryString<int>("page", out int page))
+        {
+            Page = page;
+        }
+
+        if (navigationManager.TryGetQueryString<int>("pageSize", out int pageSize))
+        {
+            PageSize = pageSize;
+        }
+
+        _result = await LoadDataAsync(Page, PageSize);
 
         TotalCount = _result!.Categories.Count;
+        TotalPages = (TotalCount + (int)PageSize - 1) / (int)PageSize;
+
+        for (int i = 1; i <= (int)TotalPages; i++)
+        {
+            _pages.Add(i);
+        }
     }
 
-    private async Task<GetCategoriesResult?> LoadDataAsync()
+    private async Task<GetCategoriesResult?> LoadDataAsync(int page, int pageSize)
     {
         return await categoryService.GetCategoriesAsync(Page, PageSize);
     }
@@ -129,37 +149,12 @@ else
         if (response)
         {
             await toastrService.ShowSuccess("Category deleted successfully", "Success");
+            await Task.Delay(500);
             await OnInitializedAsync();
         }
         else
         {
             await toastrService.ShowError("Failed to delete category", "Error");
         }
-    }
-
-    private async Task NextPage()
-    {
-        if ((Page * PageSize) < TotalCount)
-        {
-            Page++;
-
-            await LoadDataAsync();
-        }
-    }
-
-    private async Task PreviousPage()
-    {
-        if (Page > 1)
-        {
-            Page--;
-
-            await LoadDataAsync();
-        }
-    }
-
-    private async Task GoToPage(int pageNumber)
-    {
-        Page = pageNumber;
-        await LoadDataAsync();
     }
 }
