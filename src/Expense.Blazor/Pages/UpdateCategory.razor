@@ -1,0 +1,85 @@
+﻿@page "/categories/update/{CategoryId:long}"
+@inject CategoryService categoryService
+@inject NavigationService navigationService
+
+<h3 class="text-center">Update Category</h3>
+
+@if (Category == null)
+{
+    <p>Loading category details...</p>
+}
+else
+{
+    <EditForm Model="Category" OnValidSubmit="HandleValidSubmit" class="justify-content-center">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label for="categoryName" class="form-label">Name</label>
+            <InputText id="categoryName" class="form-control" @bind-Value="Category.Name" />
+            <ValidationMessage For="() => Category.Name" />
+        </div>
+
+        <div class="mb-3">
+            <label for="createdAt" class="form-label">Created At</label>
+            <input type="text" id="createdAt" class="form-control" value="@Category.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")" readonly />
+        </div>
+
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary me-2">Save Changes</button>
+            <button type="button" class="btn btn-secondary" @onclick="ReturnBack">Return Back</button>
+        </div>
+    </EditForm>
+}
+
+<style>
+    .validation-message {
+        color: red;
+        font-size: 0.9rem;
+    }
+
+    .validation-summary {
+        color: red;
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public long CategoryId { get; set; }
+
+    private CategoryDto? Category { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCategoryAsync();
+    }
+
+    private async Task LoadCategoryAsync()
+    {
+        Category = (await categoryService.GetCategoryByIdAsync(CategoryId))!.Category;
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (Category != null)
+        {
+            var response = await categoryService.UpdateCategoryAsync(CategoryId, Category);
+
+            if (response)
+            {
+                navigationService.NavigateToCategories();
+            }
+            else
+            {
+                Console.Error.WriteLine("Failed to update category.");
+            }
+        }
+    }
+
+    private void ReturnBack()
+    {
+        navigationService.NavigateToCategories();
+    }
+}

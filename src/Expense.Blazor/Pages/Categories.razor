@@ -1,5 +1,6 @@
 ﻿@page "/categories"
 @inject CategoryService categoryService
+@inject NavigationService navigationService
 
 <h3 class="text-center">Categories</h3>
 
@@ -32,7 +33,7 @@
                             <td>-------</td>
                         }
                         <td>
-                            <button type="button" class="btn btn-primary">
+                            <button type="button" class="btn btn-primary" @onclick="() => navigationService.NavigateToUpdateCategory(category.Id)">
                                 <i class="bi bi-pencil-square"></i> Edit
                             </button>
                             |
