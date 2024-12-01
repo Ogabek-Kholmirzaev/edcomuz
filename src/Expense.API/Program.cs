@@ -8,6 +8,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        "AllowLocalHost",
+        policyBuilder => policyBuilder
+            .WithOrigins("https://localhost:7225")
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
+
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -25,6 +35,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowLocalHost");
 
 app.UseSerilogRequestLogging();
 
