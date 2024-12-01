@@ -155,7 +155,8 @@ else
         if (response)
         {
             await toastrService.ShowSuccess("Outlay deleted successfully", "Success");
-            await OnInitializedAsync();
+            await Task.Delay(500);
+            navigationService.NavigateToOutlays(Page, PageSize, true);
         }
         else
         {
