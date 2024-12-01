@@ -13,7 +13,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(
         "AllowLocalHost",
         policyBuilder => policyBuilder
-            .WithOrigins("https://localhost:7225")
+            .WithOrigins("https://localhost:7105")
             .AllowAnyMethod()
             .AllowAnyHeader());
 });
