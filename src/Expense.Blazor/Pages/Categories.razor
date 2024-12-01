@@ -1,6 +1,8 @@
 ﻿@page "/categories"
 @inject CategoryService categoryService
 @inject NavigationService navigationService
+@inject IJSRuntime jsRuntime
+@inject ToastrService toastrService
 
 <h3 class="text-center">Categories</h3>
 
@@ -37,7 +39,9 @@
                                 <i class="bi bi-pencil-square"></i> Edit
                             </button>
                             |
-                            <button type="button" class="btn btn-danger">
+                            <button
+                                type="button"
+                                class="btn btn-danger" @onclick="() => ConfirmDeleteAsync(category.Id)">
                                 <i class="bi bi-trash"></i> Delete
                             </button>
                         </td>
@@ -71,6 +75,10 @@
         </div>
     </div>
 }
+else
+{
+    <p>Loading categories...</p>
+}
 
 @code {
     private GetCategoriesResult? _result;
@@ -89,6 +97,31 @@
     private async Task<GetCategoriesResult?> LoadDataAsync()
     {
         return await categoryService.GetCategoriesAsync(Page, PageSize);
+    }
+
+    private async Task ConfirmDeleteAsync(long id)
+    {
+        bool confirmed = await jsRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete category ID {id}?");
+
+        if (confirmed)
+        {
+            await DeleteCategoryAsync(id);
+        }
+    }
+
+    private async Task DeleteCategoryAsync(long id)
+    {
+        var response = await categoryService.DeleteCategoryAsync(id);
+
+        if (response)
+        {
+            await toastrService.ShowSuccess("Category deleted successfully", "Success");
+            await LoadDataAsync();
+        }
+        else
+        {
+            await toastrService.ShowError("Failed to delete category", "Error");
+        }
     }
 
     private async Task NextPage()
