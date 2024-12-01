@@ -1,6 +1,6 @@
 using Expense.Blazor.Models.Categories;
 
-namespace Expense.Blazor.Models;
+namespace Expense.Blazor.Models.Outlays;
 
 public class OutlayDto
 {
