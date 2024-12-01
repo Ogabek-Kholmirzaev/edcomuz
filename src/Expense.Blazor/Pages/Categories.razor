@@ -24,32 +24,40 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var category in _result.Categories.Data)
+                @if (!_result.Categories.Data.Any())
                 {
                     <tr>
-                        <td scope="row">@category.Id</td>
-                        <td>@category.Name</td>
-                        <td>@category.CreatedAt</td>
-                        @if (category.UpdatedAt != null)
-                        {
-                            <td>@category.UpdatedAt</td>
-                        }
-                        else
-                        {
-                            <td>-------</td>
-                        }
-                        <td>
-                            <button type="button" class="btn btn-primary" @onclick="() => navigationService.NavigateToUpdateCategory(category.Id)">
-                                <i class="bi bi-pencil-square"></i> Edit
-                            </button>
-                            |
-                            <button
-                                type="button"
-                                class="btn btn-danger" @onclick="() => ConfirmDeleteAsync(category.Id)">
-                                <i class="bi bi-trash"></i> Delete
-                            </button>
-                        </td>
+                        <td colspan="5">No categories available.</td>
                     </tr>
+                }
+                else
+                {
+                    foreach (var category in _result.Categories.Data)
+                    {
+                        <tr>
+                            <td scope="row">@category.Id</td>
+                            <td>@category.Name</td>
+                            <td>@category.CreatedAt</td>
+                            @if (category.UpdatedAt != null)
+                            {
+                                <td>@category.UpdatedAt</td>
+                            }
+                            else
+                            {
+                                <td>-------</td>
+                            }
+                            <td>
+                                <button type="button" class="btn btn-primary" @onclick="() => navigationService.NavigateToUpdateCategory(category.Id)">
+                                    <i class="bi bi-pencil-square"></i> Edit
+                                </button>
+                                |
+                                <button type="button"
+                                        class="btn btn-danger" @onclick="() => ConfirmDeleteAsync(category.Id)">
+                                    <i class="bi bi-trash"></i> Delete
+                                </button>
+                            </td>
+                        </tr>
+                    }
                 }
             </tbody>
         </table>
@@ -120,7 +128,7 @@ else
         if (response)
         {
             await toastrService.ShowSuccess("Category deleted successfully", "Success");
-            await LoadDataAsync();
+            await OnInitializedAsync();
         }
         else
         {
