@@ -16,9 +16,9 @@ public class NavigationService
         _navigationManager.NavigateTo($"/categories/update/{categoryId}", isForced);
     }
 
-    public void NavigateToCategories(bool isForced = false)
+    public void NavigateToCategories(int Page = 1, int PageSize = 50, bool isForced = false)
     {
-        _navigationManager.NavigateTo("/categories", isForced);
+        _navigationManager.NavigateTo($"/categories?page={Page}&pageSize={PageSize}", isForced);
     }
 
     public void NavigateToCreateCategory(bool isForced = false)
