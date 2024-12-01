@@ -1,7 +1,32 @@
 ﻿@page "/"
+@inject IJSRuntime jsRuntime
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1 class="text-center">Dashboard: 2024</h1>
 
-Welcome to your new app.
+<div id="chartdiv"></div>
+
+@code {
+    ExpenseInformation expenseInformation = new ExpenseInformation();
+    List<ExpenseInformation> expenseInformations = new List<ExpenseInformation>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        expenseInformations = expenseInformation.GetExpenses();
+
+        await jsRuntime.InvokeVoidAsync("GeneratePieChart", expenseInformations);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            expenseInformations = expenseInformation.GetExpenses();
+
+            await jsRuntime.InvokeVoidAsync("GeneratePieChart", expenseInformations);
+
+            StateHasChanged();
+        }
+    }
+}
