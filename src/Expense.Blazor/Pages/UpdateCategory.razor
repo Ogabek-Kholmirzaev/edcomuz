@@ -1,6 +1,7 @@
 ﻿@page "/categories/update/{CategoryId:long}"
 @inject CategoryService categoryService
 @inject NavigationService navigationService
+@inject ToastrService toastrService
 
 <h3 class="text-center">Update Category</h3>
 
@@ -12,7 +13,6 @@ else
 {
     <EditForm Model="Category" OnValidSubmit="HandleValidSubmit" class="justify-content-center">
         <DataAnnotationsValidator />
-        <ValidationSummary />
 
         <div class="mb-3">
             <label for="categoryName" class="form-label">Name</label>
@@ -69,10 +69,14 @@ else
 
             if (response)
             {
+                await toastrService.ShowSuccess("Category updated successfully!", "Update Successful");
+
                 navigationService.NavigateToCategories();
             }
             else
             {
+                await toastrService.ShowError("Failed to update category. Please try again.", "Update Failed");
+
                 Console.Error.WriteLine("Failed to update category.");
             }
         }
