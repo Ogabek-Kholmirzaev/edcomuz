@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using System.Text.Json;
 using Expense.Blazor.Models.Categories;
 
 namespace Expense.Blazor.Services;
@@ -6,6 +7,7 @@ namespace Expense.Blazor.Services;
 public class CategoryService
 {
     private readonly HttpClient _httpClient;
+    private readonly ILogger<CategoryService> _logger;
 
     public CategoryService(HttpClient httpClient)
     {
@@ -14,7 +16,11 @@ public class CategoryService
     
     public async Task<GetCategoriesResult?> GetCategoriesAsync()
     {
-        return await _httpClient.GetFromJsonAsync<GetCategoriesResult>("api/categories");
+        var result = await _httpClient.GetFromJsonAsync<GetCategoriesResult>("api/categories");
+        
+        _logger.LogInformation(JsonSerializer.Serialize(result));
+        
+        return result;
     }
 
     public async Task<GetCategoryResult?> GetCategoryByIdAsync(long id)

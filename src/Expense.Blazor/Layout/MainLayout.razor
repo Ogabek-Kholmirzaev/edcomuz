@@ -1,43 +1,45 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider />
-<MudPopoverProvider />
-<MudDialogProvider />
-<MudSnackbarProvider />
+<div class="bb-page">
 
-<MudLayout>
-    <MudAppBar Elevation="1">
-        <MudIconButton
-            Icon="@Icons.Material.Filled.Menu"
-            Color="Color.Inherit"
-            Edge="Edge.Start"
-            OnClick="@((e) => DrawerToggle())" />
-        
-        <MudText Typo="Typo.h5" Class="ml-3">Expense.Blazor</MudText>
-        
-        <MudSpacer />
-        
-        <MudIconButton
-            Icon="@Icons.Material.Filled.MoreVert"
-            Color="Color.Inherit"
-            Edge="Edge.End" />
-    </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
-        <MyNavMenu />
-    </MudDrawer>
-    <MudMainContent>
-        <MudContainer MaxWidth="MaxWidth.Medium">
-            <br />
-            @Body
-        </MudContainer>
-    </MudMainContent>
-</MudLayout>
+    <Sidebar @ref="sidebar"
+             IconName="IconName.BootstrapFill"
+             Title="Blazor Bootstrap"
+             DataProvider="SidebarDataProvider" />
+
+    <main>
+        <div class="bb-top-row px-4 d-flex justify-content-end">
+            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+        </div>
+
+        <article class="content px-4">
+            <div class="py-2">@Body</div>
+        </article>
+    </main>
+
+</div>
 
 @code {
-    bool _drawerOpen = true;
+    Sidebar sidebar;
+    IEnumerable<NavItem> navItems;
 
-    void DrawerToggle()
+    private async Task<SidebarDataProviderResult> SidebarDataProvider(SidebarDataProviderRequest request)
     {
-        _drawerOpen = !_drawerOpen;
+        if (navItems is null)
+            navItems = GetNavItems();
+
+        return await Task.FromResult(request.ApplyTo(navItems));
+    }
+
+    private IEnumerable<NavItem> GetNavItems()
+    {
+        navItems = new List<NavItem>
+        {
+            new NavItem { Id = "1", Href = "/", IconName = IconName.HouseDoorFill, Text = "Home", Match=NavLinkMatch.All},
+            new NavItem { Id = "2", Href = "/counter", IconName = IconName.PlusSquareFill, Text = "Counter"},
+            new NavItem { Id = "3", Href = "/weather", IconName = IconName.Table, Text = "Fetch Data"},
+        };
+
+        return navItems;
     }
 }

@@ -1,3 +1,7 @@
 namespace Expense.Blazor.Models;
 
-public record PaginationRequest(int PageIndex, int PageSize);
+public class PaginationRequest
+{
+    public int PageIndex { get; set; }
+    public int PageSize { get; set; }
+}

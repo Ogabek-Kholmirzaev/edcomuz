@@ -1,3 +1,6 @@
 namespace Expense.Blazor.Models.Categories;
 
-public record GetCategoryResult(CategoryDto Category);
+public class GetCategoryResult
+{
+    public CategoryDto Category { get; set; }
+}

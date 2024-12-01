@@ -1,3 +1,6 @@
 namespace Expense.Blazor.Models;
 
-public record SuccessResult(bool IsSuccess);
+public class SuccessResult
+{
+    public bool IsSuccess { get; set; }
+}
