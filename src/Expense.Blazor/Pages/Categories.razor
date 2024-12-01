@@ -44,14 +44,75 @@
                 }
             </tbody>
         </table>
+        <div class="pagination d-flex justify-content-center align-items-center mt-3">
+            <button
+                class="btn btn-primary me-2"
+                @onclick="PreviousPage"
+                disabled="@((Page <= 1))">
+                Previous
+            </button>
+
+            @for (int i = 1; i <= TotalPages; i++)
+            {
+                <button
+                    class="btn @((i == Page ? "btn-secondary" : "btn-outline-primary")) me-1"
+                    @onclick="(() => GoToPage(i))">
+                    @i
+                </button>
+            }
+
+            <button
+                class="btn btn-primary ms-2"
+                @onclick="NextPage"
+                disabled="@((Page * PageSize) >= TotalCount)">
+                Next
+            </button>
+        </div>
     </div>
 }
 
 @code {
     private GetCategoriesResult? _result;
+    private long TotalCount;
+    private int Page = 1;
+    private int PageSize = 20;
+    private long TotalPages => (TotalCount + PageSize - 1) / PageSize;
 
     protected override async Task OnInitializedAsync()
     {
-        _result = await categoryService.GetCategoriesAsync();
+        _result = await LoadDataAsync();
+
+        TotalCount = _result!.Categories.Count;
+    }
+
+    private async Task<GetCategoriesResult?> LoadDataAsync()
+    {
+        return await categoryService.GetCategoriesAsync(Page, PageSize);
+    }
+
+    private async Task NextPage()
+    {
+        if ((Page * PageSize) < TotalCount)
+        {
+            Page++;
+
+            await LoadDataAsync();
+        }
+    }
+
+    private async Task PreviousPage()
+    {
+        if (Page > 1)
+        {
+            Page--;
+
+            await LoadDataAsync();
+        }
+    }
+
+    private async Task GoToPage(int pageNumber)
+    {
+        Page = pageNumber;
+        await LoadDataAsync();
     }
 }

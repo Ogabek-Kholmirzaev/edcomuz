@@ -13,9 +13,10 @@ public class CategoryService
         _httpClient = httpClient;
     }
     
-    public async Task<GetCategoriesResult?> GetCategoriesAsync()
+    public async Task<GetCategoriesResult?> GetCategoriesAsync(int PageIndex = 1, int PageSize = 20)
     {
-        return await _httpClient.GetFromJsonAsync<GetCategoriesResult>("api/categories");
+        return await _httpClient
+            .GetFromJsonAsync<GetCategoriesResult>($"api/categories?PageIndex={PageIndex}&PageSize={PageSize}");
     }
 
     public async Task<GetCategoryResult?> GetCategoryByIdAsync(long id)
