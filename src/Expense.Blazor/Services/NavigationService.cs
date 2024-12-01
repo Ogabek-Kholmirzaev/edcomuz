@@ -20,4 +20,9 @@ public class NavigationService
     {
         _navigationManager.NavigateTo("/categories");
     }
+
+    public void NavigateToCreateCategory()
+    {
+        _navigationManager.NavigateTo("/categories/create");
+    }
 }

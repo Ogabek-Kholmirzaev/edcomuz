@@ -1,0 +1,58 @@
+﻿@page "/categories/create"
+@inject CategoryService categoryService
+@inject NavigationService navigationService
+@inject ToastrService toastrService
+
+<h3 class="text-center">Create Category</h3>
+
+<EditForm Model="Category" OnValidSubmit="HandleValidSubmit" class="justify-content-center">
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <label for="categoryName" class="form-label">Name</label>
+        <InputText id="categoryName" class="form-control" @bind-Value="Category.Name" />
+        <ValidationMessage For="() => Category.Name" />
+    </div>
+
+    <div class="mt-3">
+        <button type="submit" class="btn btn-success me-2">Create</button>
+        <button type="button" class="btn btn-secondary" @onclick="ReturnBack">Cancel</button>
+    </div>
+</EditForm>
+
+<style>
+    .validation-message {
+        color: red;
+        font-size: 0.9rem;
+    }
+
+    .validation-summary {
+        color: red;
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
+</style>
+
+@code {
+    private CategoryDto Category = new CategoryDto();
+
+    private async Task HandleValidSubmit()
+    {
+        var response = await categoryService.CreateCategoryAsync(Category);
+
+        if (response)
+        {
+            await toastrService.ShowSuccess("Category created successfully!");
+            navigationService.NavigateToCategories();
+        }
+        else
+        {
+            await toastrService.ShowError("Failed to create category.");
+        }
+    }
+
+    private void ReturnBack()
+    {
+        navigationService.NavigateToCategories();
+    }
+}

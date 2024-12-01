@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expense.Domain", "src\Expen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expense.Infrastructure", "src\Expense.Infrastructure\Expense.Infrastructure.csproj", "{4B002BC7-C26D-4222-8312-0C9365F1C75E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expense.Blazor", "src\Expense.Blazor\Expense.Blazor.csproj", "{F050C336-7FE4-42FE-93E8-4234AF275B9E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expense.Blazor", "src\Expense.Blazor\Expense.Blazor.csproj", "{F050C336-7FE4-42FE-93E8-4234AF275B9E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

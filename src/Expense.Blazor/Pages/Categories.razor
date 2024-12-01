@@ -6,6 +6,10 @@
 
 <h3 class="text-center">Categories</h3>
 
+<button class="btn btn-primary mb-3" @onclick="() => navigationService.NavigateToCreateCategory()">
+    <i class="bi bi-plus-circle"></i> Create
+</button>
+
 @if (_result != null)
 {
     <div class="table-responsive pt-3">
