@@ -11,33 +11,33 @@ public class NavigationService
         _navigationManager = navigationManager;
     }
 
-    public void NavigateToUpdateCategory(long categoryId)
+    public void NavigateToUpdateCategory(long categoryId, bool isForced = false)
     {
-        _navigationManager.NavigateTo($"/categories/update/{categoryId}");
+        _navigationManager.NavigateTo($"/categories/update/{categoryId}", isForced);
     }
 
-    public void NavigateToCategories()
+    public void NavigateToCategories(bool isForced = false)
     {
-        _navigationManager.NavigateTo("/categories");
+        _navigationManager.NavigateTo("/categories", isForced);
     }
 
-    public void NavigateToCreateCategory()
+    public void NavigateToCreateCategory(bool isForced = false)
     {
-        _navigationManager.NavigateTo("/categories/create");
+        _navigationManager.NavigateTo("/categories/create", isForced);
     }
 
-    public void NavigateToOutlay(long outlayId)
+    public void NavigateToUpdateOutlay(long outlayId, bool isForced = false)
     {
-        _navigationManager.NavigateTo($"/outlays/update/{outlayId}");
+        _navigationManager.NavigateTo($"/outlays/update/{outlayId}", isForced);
     }
 
-    public void NavigateToOutlay()
+    public void NavigateToOutlays(int Page, int PageSize, bool isForced = false)
     {
-        _navigationManager.NavigateTo("/outlays");
+        _navigationManager.NavigateTo($"/outlays?page={Page}&pageSize={PageSize}", isForced);
     }
 
-    public void NavigateToCreateOutlay()
+    public void NavigateToCreateOutlay(bool isForced = false)
     {
-        _navigationManager.NavigateTo("/outlays/create");
+        _navigationManager.NavigateTo("/outlays/create", isForced);
     }
 }

@@ -1,0 +1,165 @@
+﻿@page "/outlays"
+@inject OutlayService outlaysService
+@inject NavigationService navigationService
+@inject IJSRuntime jsRuntime
+@inject ToastrService toastrService
+@inject NavigationManager navigationManager
+
+<h3 class="text-center">Outlays</h3>
+
+<button class="btn btn-primary mb-3" @onclick="() => navigationService.NavigateToCreateOutlay()">
+    <i class="bi bi-plus-circle"></i> Create
+</button>
+
+@if (_result != null)
+{
+    <div class="table-responsive pt-3">
+        <table class="table table-striped align-middle table-bordered text-center">
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">CreatedAt</th>
+                    <th scope="col">UpdatedAt</th>
+                    <th scope="col">CategoryId</th>
+                    <th scope="col">Category Name</th>
+                    <th scope="col">Comment</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!_result.Outlays.Data.Any())
+                {
+                    <tr>
+                        <td colspan="5">No outlays available.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var outlay in _result.Outlays.Data)
+                    {
+                        <tr>
+                            <td scope="row">@outlay.Id</td>
+                            <td>@outlay.Date</td>
+                            <td>@outlay.Price.ToString("0.00")</td>
+                            <td>@outlay.CreatedAt</td>
+                            @if (outlay.UpdatedAt != null)
+                            {
+                                <td>@outlay.UpdatedAt</td>
+                            }
+                            else
+                            {
+                                <td>-------</td>
+                            }
+                            <td>@outlay.CategoryId</td>
+                            <td>@outlay.Category?.Name</td>
+                            <td>@outlay.Comment</td>
+                            <td>
+                                <button type="button" class="btn btn-primary m-1" @onclick="() => navigationService.NavigateToUpdateOutlay(outlay.Id)">
+                                    <i class="bi bi-pencil-square"></i> Edit
+                                </button>
+                                <button type="button" class="btn btn-danger m-1" @onclick="() => ConfirmDeleteAsync(outlay.Id)">
+                                    <i class="bi bi-trash"></i> Delete
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        <div class="pagination d-flex justify-content-center align-items-center mt-3 mb-3">
+            <button
+                class="btn btn-primary me-2"
+                disabled="@((Page <= 1))"
+                @onclick="() => navigationService.NavigateToOutlays(Page - 1, PageSize, true)">
+                Previous
+            </button>
+
+            @foreach (var item in _pages)
+            {
+                <button
+                    class="btn @((item == Page ? " btn-secondary" : "btn-outline-primary" )) me-1"
+                    @onclick = "() => navigationService.NavigateToOutlays(item, PageSize, true)">
+                    @item
+                </button>
+            }
+
+            <button
+                class="btn btn-primary ms-2"
+                disabled="@((Page * PageSize) >= TotalCount)"
+                @onclick="() => navigationService.NavigateToOutlays(Page + 1, PageSize, true)">
+                Next
+            </button>
+        </div>
+    </div>
+}
+else
+{
+    <p>Loading outlays...</p>
+}
+
+@code {
+    private List<int> _pages = new();
+    private GetOutlaysResult? _result;
+    private int Page;
+    private int PageSize;
+    private long TotalCount;
+    private long TotalPages;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Page = 1;
+        PageSize = 50;
+
+        if (navigationManager.TryGetQueryString<int>("page", out int page))
+        {
+            Page = page;
+        }
+
+        if (navigationManager.TryGetQueryString<int>("pageSize", out int pageSize))
+        {
+            PageSize = pageSize;
+        }
+
+        _result = await LoadDataAsync(Page, PageSize);
+
+        TotalCount = _result!.Outlays.Count;
+        TotalPages = (TotalCount + (int)PageSize - 1) / (int)PageSize;
+
+        for (int i = 1; i <= (int)TotalPages; i++)
+        {
+            _pages.Add(i);
+        }
+    }
+
+    private async Task<GetOutlaysResult?> LoadDataAsync(int page, int pageSize)
+    {
+        return await outlaysService.GetOutlaysAsync(page, pageSize);
+    }
+
+    private async Task ConfirmDeleteAsync(long id)
+    {
+        bool confirmed = await jsRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete outlay ID {id}?");
+
+        if (confirmed)
+        {
+            await DeleteOutlayAsync(id);
+        }
+    }
+
+    private async Task DeleteOutlayAsync(long id)
+    {
+        var response = await outlaysService.DeleteOutlayAsync(id);
+
+        if (response)
+        {
+            await toastrService.ShowSuccess("Outlay deleted successfully", "Success");
+            await OnInitializedAsync();
+        }
+        else
+        {
+            await toastrService.ShowError("Failed to delete outlay", "Error");
+        }
+    }
+}
