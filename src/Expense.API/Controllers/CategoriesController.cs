@@ -1,6 +1,7 @@
 using Expense.Application.Categories.CreateCategory;
 using Expense.Application.Categories.DeleteCategory;
 using Expense.Application.Categories.GetCategories;
+using Expense.Application.Categories.GetCategoriesInputText;
 using Expense.Application.Categories.GetCategoryById;
 using Expense.Application.Categories.UpdateCategory;
 using Expense.Application.DTOs.Categories;
@@ -18,6 +19,14 @@ public class CategoriesController(ISender sender) : ControllerBase
     public async Task<ActionResult<GetCategoriesResult>> Get([FromQuery] PaginationRequest request)
     {
         var response = await sender.Send(new GetCategoriesQuery(request));
+
+        return Ok(response);
+    }
+
+    [HttpGet("input-text")]
+    public async Task<ActionResult<GetCategoriesInputTextResult>> GetInputText()
+    {
+        var response = await sender.Send(new GetCategoriesInputTextQuery());
 
         return Ok(response);
     }
