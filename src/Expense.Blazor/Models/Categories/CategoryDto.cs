@@ -1,4 +1,4 @@
-﻿namespace Expense.Blazor.Models;
+﻿namespace Expense.Blazor.Models.Categories;
 
 public record CategoryDto(
     long Id,
