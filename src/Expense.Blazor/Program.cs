@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Expense.Blazor;
+using Expense.Blazor.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
@@ -16,5 +17,6 @@ builder.Services.AddScoped(sp =>
     });
 
 builder.Services.AddMudServices();
+builder.Services.AddScoped<CategoryService>();
 
 await builder.Build().RunAsync();
