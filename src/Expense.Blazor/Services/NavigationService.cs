@@ -25,4 +25,19 @@ public class NavigationService
     {
         _navigationManager.NavigateTo("/categories/create");
     }
+
+    public void NavigateToOutlay(long outlayId)
+    {
+        _navigationManager.NavigateTo($"/outlays/update/{outlayId}");
+    }
+
+    public void NavigateToOutlay()
+    {
+        _navigationManager.NavigateTo("/outlays");
+    }
+
+    public void NavigateToCreateOutlay()
+    {
+        _navigationManager.NavigateTo("/outlays/create");
+    }
 }
