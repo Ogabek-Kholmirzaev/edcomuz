@@ -43,10 +43,10 @@
                             <td scope="row">@outlay.Id</td>
                             <td>@outlay.Date</td>
                             <td>@outlay.Price.ToString("0.00")</td>
-                            <td>@outlay.CreatedAt</td>
+                            <td>@outlay.CreatedAt.ToLocalTime()</td>
                             @if (outlay.UpdatedAt != null)
                             {
-                                <td>@outlay.UpdatedAt</td>
+                                <td>@outlay.UpdatedAt?.ToLocalTime()</td>
                             }
                             else
                             {

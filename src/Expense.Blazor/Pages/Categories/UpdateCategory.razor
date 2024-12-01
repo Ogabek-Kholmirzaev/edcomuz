@@ -22,7 +22,7 @@ else
 
         <div class="mb-3">
             <label for="createdAt" class="form-label">Created At</label>
-            <input type="text" id="createdAt" class="form-control" value="@Category.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")" readonly />
+            <input type="text" id="createdAt" class="form-control" value="@Category.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")" readonly />
         </div>
 
         <div class="mt-3">

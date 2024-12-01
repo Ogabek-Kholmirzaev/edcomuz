@@ -38,10 +38,10 @@
                         <tr>
                             <td scope="row">@category.Id</td>
                             <td>@category.Name</td>
-                            <td>@category.CreatedAt</td>
+                            <td>@category.CreatedAt.ToLocalTime()</td>
                             @if (category.UpdatedAt != null)
                             {
-                                <td>@category.UpdatedAt</td>
+                                <td>@category.UpdatedAt?.ToLocalTime()</td>
                             }
                             else
                             {
