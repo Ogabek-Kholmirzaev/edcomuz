@@ -12,7 +12,7 @@ public class OutlayService
         _httpClient = httpClient;
     }
 
-    public async Task<GetOutlaysResult?> GetOutlaysAsync(int PageIndex = 1, int PageSize = 20)
+    public async Task<GetOutlaysResult?> GetOutlaysAsync(int PageIndex = 1, int PageSize = 50)
     {
         return await _httpClient
             .GetFromJsonAsync<GetOutlaysResult>($"api/outlays?PageIndex={PageIndex}&PageSize={PageSize}");

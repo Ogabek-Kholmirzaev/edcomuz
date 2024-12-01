@@ -31,7 +31,7 @@ public class NavigationService
         _navigationManager.NavigateTo($"/outlays/update/{outlayId}", isForced);
     }
 
-    public void NavigateToOutlays(int Page, int PageSize, bool isForced = false)
+    public void NavigateToOutlays(int Page = 1, int PageSize = 50, bool isForced = false)
     {
         _navigationManager.NavigateTo($"/outlays?page={Page}&pageSize={PageSize}", isForced);
     }
