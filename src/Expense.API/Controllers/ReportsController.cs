@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Expense.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/reports")]
 [ApiController]
 public class ReportsController(ISender sender) : ControllerBase
 {
