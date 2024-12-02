@@ -22,7 +22,7 @@ public class GetReportsByYearHandler(IRepository<Outlay> outlayRepository)
             .Select(outlayGroup => new ReportDto(
                 query.Year,
                 new CultureInfo("en-US").DateTimeFormat.GetMonthName(outlayGroup.Key),
-                outlayGroup.Sum(outlay => outlay.Price).ToString(),
+                $"${outlayGroup.Sum(outlay => outlay.Price)}",
                 outlayGroup.LongCount().ToString()))
             .ToListAsync(cancellationToken);
 
