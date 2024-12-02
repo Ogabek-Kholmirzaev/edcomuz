@@ -15,7 +15,7 @@ namespace Expense.API.Controllers;
 public class OutlaysController(ISender sender) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<GetOutlaysResult>> Get([FromQuery] PaginationRequest request)
+    public async Task<ActionResult<GetOutlaysResult>> Get([FromQuery] GetOutlaysRequest request)
     {
         var response = await sender.Send(new GetOutlaysQuery(request));
 

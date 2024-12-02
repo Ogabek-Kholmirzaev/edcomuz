@@ -15,10 +15,41 @@ public class GetOutlaysHandler(IRepository<Outlay> outlayRepository)
         GetOutlaysQuery query,
         CancellationToken cancellationToken)
     {
-        
         var outlaysQuery = outlayRepository.GetAll(null, null, false);
 
         var totalCount = await outlaysQuery.LongCountAsync(cancellationToken);
+
+        if (query.Request.CategoryId != null)
+        {
+            outlaysQuery = outlaysQuery.Where(outlay => outlay.CategoryId == query.Request.CategoryId);
+        }
+
+        if (!string.IsNullOrWhiteSpace(query.Request.Comment))
+        {
+            outlaysQuery = outlaysQuery.Where(outlay =>
+                outlay.Comment != null && outlay.Comment.Contains(query.Request.Comment));
+        }
+
+        if (query.Request.DateFrom != null)
+        {
+            outlaysQuery = outlaysQuery.Where(outlay => outlay.Date >= query.Request.DateFrom);
+        }
+
+        if (query.Request.DateTo != null)
+        {
+            outlaysQuery = outlaysQuery.Where(outlay => outlay.Date <= query.Request.DateTo);
+        }
+
+        if (query.Request.PriceFrom != null)
+        {
+            outlaysQuery = outlaysQuery.Where(outlay => outlay.Price >= query.Request.PriceFrom);
+        }
+
+        if (query.Request.PriceTo != null)
+        {
+            outlaysQuery = outlaysQuery.Where(outlay => outlay.Price <= query.Request.PriceTo);
+        }
+
         var pageIndex = query.Request.PageIndex;
         var pageSize = query.Request.PageSize;
         
