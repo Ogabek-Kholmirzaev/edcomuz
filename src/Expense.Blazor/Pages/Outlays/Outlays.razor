@@ -4,12 +4,54 @@
 @inject IJSRuntime jsRuntime
 @inject ToastrService toastrService
 @inject NavigationManager navigationManager
+@inject CategoryService categoryService
 
 <h3 class="text-center">Outlays</h3>
 
 <button class="btn btn-primary mb-3" @onclick="() => navigationService.NavigateToCreateOutlay()">
     <i class="bi bi-plus-circle"></i> Create
 </button>
+
+<div class="row mb-3">
+    <div class="col-md-3">
+        <label for="categoryId" class="form-label">Category</label>
+        <InputSelect id="categoryId" @bind-Value="_filters.CategoryId" class="form-select">
+            <option value="">-- All Categories --</option>
+            @foreach (var category in _categories)
+            {
+                <option value="@category.Id">@category.Name</option>
+            }
+        </InputSelect>
+    </div>
+    <div class="col-md-3">
+        <label for="comment" class="form-label">Comment</label>
+        <InputText id="comment" @bind-Value="_filters.Comment" class="form-control" />
+    </div>
+    <div class="col-md-3">
+        <label for="dateFrom" class="form-label">Date From</label>
+        <InputDate id="dateFrom" @bind-Value="_filters.DateFrom" class="form-control" />
+    </div>
+    <div class="col-md-3">
+        <label for="dateTo" class="form-label">Date To</label>
+        <InputDate id="dateTo" @bind-Value="_filters.DateTo" class="form-control" />
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-3">
+        <label for="priceFrom" class="form-label">Price From</label>
+        <InputNumber id="priceFrom" @bind-Value="_filters.PriceFrom" class="form-control" />
+    </div>
+    <div class="col-md-3">
+        <label for="priceTo" class="form-label">Price To</label>
+        <InputNumber id="priceTo" @bind-Value="_filters.PriceTo" class="form-control" />
+    </div>
+    <div class="col-md-6 d-flex align-items-end">
+        <button class="btn btn-primary me-2" @onclick="ApplyFilters">Filter</button>
+        <button class="btn btn-secondary" @onclick="ClearFilters">Clear</button>
+    </div>
+</div>
+
 
 @if (_result != null)
 {
@@ -72,7 +114,7 @@
             <button
                 class="btn btn-primary me-2"
                 disabled="@((Page <= 1))"
-                @onclick="() => navigationService.NavigateToOutlays(Page - 1, PageSize, true)">
+                @onclick="() => navigationService.NavigateToOutlays(Page - 1, PageSize, true, _filters)">
                 Previous
             </button>
 
@@ -80,7 +122,7 @@
             {
                 <button
                     class="btn @((item == Page ? " btn-secondary" : "btn-outline-primary" )) me-1"
-                    @onclick = "() => navigationService.NavigateToOutlays(item, PageSize, true)">
+                    @onclick = "() => navigationService.NavigateToOutlays(item, PageSize, true, _filters)">
                     @item
                 </button>
             }
@@ -88,7 +130,7 @@
             <button
                 class="btn btn-primary ms-2"
                 disabled="@((Page * PageSize) >= TotalCount)"
-                @onclick="() => navigationService.NavigateToOutlays(Page + 1, PageSize, true)">
+                @onclick="() => navigationService.NavigateToOutlays(Page + 1, PageSize, true, _filters)">
                 Next
             </button>
         </div>
@@ -100,6 +142,9 @@ else
 }
 
 @code {
+    private OutlayFilters _filters = new();
+    private List<CategoryInputTextDto> _categories = new();
+
     private List<int> _pages = new();
     private GetOutlaysResult? _result;
     private int Page;
@@ -122,7 +167,38 @@ else
             PageSize = pageSize;
         }
 
-        _result = await LoadDataAsync(Page, PageSize);
+        if (navigationManager.TryGetQueryString<int>("categoryId", out int categoryId))
+        {
+            _filters.CategoryId = categoryId;
+        }
+
+        if (navigationManager.TryGetQueryString<string>("comment", out string comment))
+        {
+            _filters.Comment = comment;
+        }
+
+        if (navigationManager.TryGetQueryString<string>("dateFrom", out string dateFrom))
+        {
+            _filters.DateFrom = DateOnly.Parse(dateFrom);
+        }
+
+        if (navigationManager.TryGetQueryString<string>("dateTo", out string dateTo))
+        {
+            _filters.DateTo = DateOnly.Parse(dateTo);
+        }
+
+        if (navigationManager.TryGetQueryString<decimal>("priceFrom", out decimal priceFrom))
+        {
+            _filters.PriceFrom = priceFrom;
+        }
+
+        if (navigationManager.TryGetQueryString<decimal>("priceTo", out decimal priceTo))
+        {
+            _filters.PriceTo = priceTo;
+        }
+
+        _result = await LoadDataAsync(Page, PageSize, _filters);
+        _categories = (await categoryService.GetCategoriesInputTextAsync()).CategoriesInputText;
 
         TotalCount = _result!.Outlays.Count;
         TotalPages = (TotalCount + (int)PageSize - 1) / (int)PageSize;
@@ -133,9 +209,9 @@ else
         }
     }
 
-    private async Task<GetOutlaysResult?> LoadDataAsync(int page, int pageSize)
+    private async Task<GetOutlaysResult?> LoadDataAsync(int page, int pageSize, OutlayFilters filters)
     {
-        return await outlaysService.GetOutlaysAsync(page, pageSize);
+        return await outlaysService.GetOutlaysAsync(page, pageSize, filters);
     }
 
     private async Task ConfirmDeleteAsync(long id)
@@ -163,4 +239,15 @@ else
             await toastrService.ShowError("Failed to delete outlay", "Error");
         }
     }
+
+    private async Task ApplyFilters()
+    {
+        navigationService.NavigateToOutlays(1, PageSize, true, _filters);
+    }
+
+    private async Task ClearFilters()
+    {
+        navigationService.NavigateToOutlays(1, PageSize, true);
+    }
+
 }

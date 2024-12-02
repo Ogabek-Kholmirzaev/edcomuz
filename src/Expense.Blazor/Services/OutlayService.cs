@@ -1,4 +1,5 @@
-﻿using Expense.Blazor.Models.Outlays;
+﻿using Expense.Blazor.Models;
+using Expense.Blazor.Models.Outlays;
 using System.Net.Http.Json;
 
 namespace Expense.Blazor.Services;
@@ -12,10 +13,45 @@ public class OutlayService
         _httpClient = httpClient;
     }
 
-    public async Task<GetOutlaysResult?> GetOutlaysAsync(int PageIndex = 1, int PageSize = 50)
+    public async Task<GetOutlaysResult?> GetOutlaysAsync(int PageIndex = 1, int PageSize = 50, OutlayFilters filters = null)
     {
+        var queryString = $"?page={PageIndex}&pageSize={PageSize}";
+
+        if (filters != null)
+        {
+            if (filters.CategoryId.HasValue)
+            {
+                queryString += $"&categoryId={filters.CategoryId}";
+            }
+
+            if (!string.IsNullOrWhiteSpace(filters.Comment))
+            {
+                queryString += $"&comment={filters.Comment}";
+            }
+
+            if (filters.DateFrom.HasValue)
+            {
+                queryString += $"&dateFrom={filters.DateFrom}";
+            }
+
+            if (filters.DateTo.HasValue)
+            {
+                queryString += $"&dateTo={filters.DateTo}";
+            }
+
+            if (filters.PriceFrom.HasValue)
+            {
+                queryString += $"&priceFrom={filters.PriceFrom.Value}";
+            }
+
+            if (filters.PriceTo.HasValue)
+            {
+                queryString += $"&priceTo={filters.PriceTo.Value}";
+            }
+        }
+
         return await _httpClient
-            .GetFromJsonAsync<GetOutlaysResult>($"api/outlays?PageIndex={PageIndex}&PageSize={PageSize}");
+            .GetFromJsonAsync<GetOutlaysResult>($"api/outlays{queryString}");
     }
 
     public async Task<GetOutlayResult?> GetOutlayByIdAsync(long id)
