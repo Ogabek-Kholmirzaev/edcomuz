@@ -4,7 +4,6 @@ using Expense.Application.Outlays.DeleteOutlay;
 using Expense.Application.Outlays.GetOutlayById;
 using Expense.Application.Outlays.GetOutlays;
 using Expense.Application.Outlays.UpdateOutlay;
-using Expense.Application.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

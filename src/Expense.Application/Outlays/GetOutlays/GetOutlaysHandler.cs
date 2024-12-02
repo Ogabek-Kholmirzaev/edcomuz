@@ -17,8 +17,6 @@ public class GetOutlaysHandler(IRepository<Outlay> outlayRepository)
     {
         var outlaysQuery = outlayRepository.GetAll(null, null, false);
 
-        var totalCount = await outlaysQuery.LongCountAsync(cancellationToken);
-
         if (query.Request.CategoryId != null)
         {
             outlaysQuery = outlaysQuery.Where(outlay => outlay.CategoryId == query.Request.CategoryId);
@@ -50,6 +48,7 @@ public class GetOutlaysHandler(IRepository<Outlay> outlayRepository)
             outlaysQuery = outlaysQuery.Where(outlay => outlay.Price <= query.Request.PriceTo);
         }
 
+        var totalCount = await outlaysQuery.LongCountAsync(cancellationToken);
         var pageIndex = query.Request.PageIndex;
         var pageSize = query.Request.PageSize;
         
