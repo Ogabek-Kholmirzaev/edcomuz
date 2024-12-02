@@ -14,8 +14,9 @@ public class GetCategoriesInputTextHandler(
         GetCategoriesInputTextQuery request,
         CancellationToken cancellationToken)
     {
-        var categoryInputTextDtos = await (categoryRespository.GetAll(null, null, false)
-            .Select(category => new CategoryInputTextDto(category.Id, category.Name)))
+        var categoryInputTextDtos = await categoryRespository.GetAll(null, null, false)
+            .OrderBy(category => category.Id)
+            .Select(category => new CategoryInputTextDto(category.Id, category.Name))
             .ToListAsync(cancellationToken);
 
         return new GetCategoriesInputTextResult(categoryInputTextDtos);
