@@ -2,4 +2,4 @@
 
 namespace Expense.Application.Reports.GetReportsByYear;
 
-public record GetReportsByYearResult(IEnumerable<ReportDto> Report);
+public record GetReportsByYearResult(IEnumerable<ReportDto> Reports);

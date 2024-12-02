@@ -2,5 +2,5 @@
 
 public class GetReportsByYearResult
 {
-    public IEnumerable<ReportDto> Report { get; set; } = default!;
+    public List<ReportDto> Reports { get; set; } = new();
 }
